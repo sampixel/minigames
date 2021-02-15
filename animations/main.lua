@@ -25,12 +25,12 @@ function love.load()
 end
 
 function love.update(dt)
-  currentframe = currentframe + (10 * dt)
-  if (currentframe >= character.numframes) then
-    currentframe = 1
-  end
+currentframe = currentframe + (10 * dt)
+if (currentframe >= character.numframes) then
+  currentframe = 1
+end
 end
 
 function love.draw()
-  love.graphics.draw(character.image, character.frames[math.floor(currentframe)], character.x, character.y)
+love.graphics.draw(character.image, character.frames[math.floor(currentframe)], character.x, character.y)
 end
