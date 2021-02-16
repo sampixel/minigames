@@ -15,10 +15,14 @@ end
 
 function class.draw(self)
   self.rotation = self.rotation or 0
-  self.xs = self.xs or 1
-  self.ys = self.ys or 1
+  self.xScale = self.xScale or 1
+  self.yScale = self.yScale or 1
 
-  love.graphics.draw(self.image, self.x, self.y, self.rotation, self.xs, self.ys, self.width/2, 1)
+  love.graphics.draw(self.image, self.x, self.y, self.rotation, self.xScale, self.yScale, 1, 1)
+end
+
+function class.print(self)
+  
 end
 
 function class.checkCollision(self, other)
