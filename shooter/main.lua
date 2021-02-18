@@ -27,6 +27,7 @@ function love.load()
   ball.score.num = 30
   ball.score.x = 0
   ball.score.y = 0
+  ball.isStarted = false
 
   ground = {}
   ground.body = love.physics.newBody(world, CW/2, CH-20, "static")
@@ -55,6 +56,11 @@ function love.load()
       ))
     end
   end
+
+  health = {}
+  health.text = "health: "
+  health.x = CW - 250
+  health.y = CH - 30
 end
 
 
@@ -66,14 +72,26 @@ function love.update(dt)
   ball.score.x = ball.body:getX()
   ball.score.y = ball.body:getY()
 
+  if not (ball.isStarted) then
+    ball.body:applyLinearImpulse(150, 0)
+    ball.isStarted = true
+  end
+
+  if ((ball.body:getX() + ball.shape:getRadius() >= CW) or
+      (ball.body:getX() - ball.shape:getRadius() <= 0)) then
+    local vx = ball.body:getLinearVelocity()
+    ball.body:applyLinearImpulse(-vx * 2, 0)
+  end
+
   if (util.checkDistance(ball, shooter)) then
+    shooter.lives = shooter.lives - 1
     if (shooter.lives < 1) then  
       sound.scream:play()
+      shooter.lives = 0
       print("Game Over")
     else
       sound.ouch:play()
-      shooter.lives = shooter.lives - 1
-      print(shooter.lives)
+      shooter.x = CW - (shooter.width / 2)
     end
   end
 
@@ -119,6 +137,7 @@ function love.draw()
 
   love.graphics.setColor(0, 0, 0)
   love.graphics.print(ball.score.num, ball.score.x - ball.shape:getRadius()/2, ball.score.y - ball.shape:getRadius()/2, 0, 2, 2)
+  love.graphics.print(health.text .. shooter.lives, health.x, health.y, 0, 2, 2)
 
   love.graphics.setColor(1, 1, 1, 1)
 end

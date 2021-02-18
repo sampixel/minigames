@@ -59,7 +59,7 @@ object["shooter"] = {
       self.current_frame = 7
     end
     
-    self.current_frame = self.current_frame + (5 * dt)
+    self.current_frame = self.current_frame + (10 * dt)
   end
 }
 
