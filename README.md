@@ -1,7 +1,10 @@
-# minigames with Love2D game framework
+# Minigames with Love2D game framework
 
-### dropvbox
+### Dropvbox
 ![dropvbox](images/dropvbox.png)
 
-### shooter
+### Shooter
 ![shooter](images/shooter.png)
+
+### Breakout
+![breakout](images/breakout.png)
