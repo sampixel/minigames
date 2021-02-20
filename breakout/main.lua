@@ -72,6 +72,24 @@ function love.update(dt)
           smash:play()
           circle.speedY = -circle.speedY
           row[j] = nil
+        elseif ((circle.y - circle.radius <= row[j].y + row[j].height) and
+            (circle.x - circle.radius <= row[j].x + row[j].width) and
+            (circle.x + circle.radius >= row[j].x)) then
+          smash:play()
+          circle.speedY = -circle.speedY
+          row[j] = nil
+        elseif ((circle.x + circle.radius >= row[j].x) and
+            (circle.y + circle.radius >= row[j].y) and
+            (circle.y - circle.radius <= row[j].y + row[j].height)) then
+          smash:play()
+          circle.speedX = -circle.speedX
+          row[j] = nil
+        elseif ((circle.x - circle.radius <= row[j].width) and
+            (circle.y + circle.radius >= row[j].y) and
+            (circle.y - circle.radius <= row[j].y + row[j].height)) then
+          smash:play()
+          circle.speedX = -circle.speedX
+          row[j] = nil
         end
       end
     end
