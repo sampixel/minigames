@@ -3,8 +3,8 @@ function love.load()
   CH = love.graphics.getHeight()
 
   pong = {}
-  pong.speedX = 150
-  pong.speedY = 150
+  pong.speedX = 250
+  pong.speedY = 250
   pong.width = 5
   pong.height = 5
   pong.x = CW/2 - pong.width/2
@@ -14,7 +14,7 @@ function love.load()
 
   player.left = {}
   player.left.score = 0
-  player.left.speed = 300
+  player.left.speed = 400
   player.left.width = 10
   player.left.height = 50
   player.left.x = player.left.width/2
@@ -22,11 +22,14 @@ function love.load()
 
   player.right = {}
   player.right.score = 0
-  player.right.speed = 300
+  player.right.speed = 400
   player.right.width = player.left.width
   player.right.height = player.left.height
   player.right.x = CW - (player.right.width*2)
   player.right.y = CH/2 - player.right.height/2
+
+  pok = love.audio.newSource("audio/pok.wav", "stream")
+  lose = love.audio.newSource("audio/lose.wav", "stream")
 end
 
 function love.update(dt)
@@ -34,24 +37,32 @@ function love.update(dt)
   pong.y = pong.y + pong.speedY * dt
 
   if (pong.x <= 0) then
+    lose:play()
     player.right.score = player.right.score + 1
+    pong.speedX = -pong.speedX
     pong.x = CW/2 - pong.width/2
     pong.y = CH/2 - pong.height/2
   elseif (pong.x + pong.width >= CW) then
+    lose:play()
     player.left.score = player.left.score + 1
+    pong.speedX = -pong.speedX
     pong.x = CW/2 - pong.width/2
     pong.y = CH/2 - pong.height/2
   elseif (pong.y <= 0) then
+    pok:play()
     pong.speedY = -pong.speedY
   elseif (pong.y + pong.height >= CH) then
+    pok:play()
     pong.speedY = -pong.speedY
   elseif ((pong.x <= player.left.x + player.left.width) and
         (pong.y <= player.left.y + player.left.height) and
         (pong.y + pong.height >= player.left.y)) then
+    pok:play()
     pong.speedX = -pong.speedX
   elseif ((pong.x + pong.width >= player.right.x) and
         (pong.y <= player.right.y + player.right.height) and
         (pong.y + pong.height >= player.right.y)) then
+      pok:play()
       pong.speedX = -pong.speedX
   end
 
