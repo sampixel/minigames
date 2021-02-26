@@ -1,19 +1,15 @@
 function love.load()
   class = require("libs.class")
 
-  love.graphics.setBackgroundColor(0.5, 0.5, 0.5)
-
   CW = love.graphics.getWidth()
   CH = love.graphics.getHeight()
-
-  math.randomseed(os.time())
 
   player = {}
 
   player.left = class:extend({filename = "left"})
   player.left:load()
   player.left.x = CW/3
-  player.left.y = CH - player.left.height*1.5
+  player.left.y = CH - player.left.height*1.2
   player.left.speed = 100
   player.left.score = 0
   player.left.upButton = "w"
@@ -22,7 +18,7 @@ function love.load()
   player.right = class:extend({filename = "right"})
   player.right:load()
   player.right.x = CW/1.5
-  player.right.y = CH - player.right.height*1.5
+  player.right.y = CH - player.right.height*1.2
   player.right.speed = 100
   player.right.score = 0
   player.right.upButton = "k"
