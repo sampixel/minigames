@@ -30,7 +30,7 @@ object["grass"] = {
 }
 
 object["shooter"] = {
-  filename = "shooter",
+  filename = "shooter_sheets",
   status = "idle",
   lives = 3,
   speed = 300,
