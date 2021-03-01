@@ -2,18 +2,29 @@ function love.load()
   CW = love.graphics.getWidth()
   CH = love.graphics.getHeight()
 
+  crunch = love.audio.newSource("audio/crunch.wav", "stream")
+  bite = love.audio.newSource("audio/bite.wav", "stream")
+
   time = 0
+  size = 50
   arrayX = {}
   arrayY = {}
 
   point = {}
-  point.x = math.random(CW)
-  point.y = math.random(CH)
-  point.width = 20
+  point.width = size
   point.height = point.width
+  point.x = point.width*5
+  point.y = point.height*4
+  point.checkPosition = function(self)
+    repeat
+      self.x = math.random(CW-self.width)
+      self.y = math.random(CH-self.height)
+    until (self.x % self.width == 0) and (self.y % self.height == 0)
+  end
   
   snake = {}
   snake[1] = {
+    text = "snake lenght: ",
     button = {
       up = false,
       down = false,
@@ -67,10 +78,10 @@ end
 
 function love.update(dt)
   if (snake[1]:collision(point)) then
-    for i = #arrayX, 2, -1 do
-      arrayX[i+1] = arrayX[i]
-      arrayY[i+1] = arrayY[i]
-    end
+    crunch:play()
+
+    arrayX[#arrayX+1] = arrayX[#arrayX]
+    arrayY[#arrayY+1] = arrayY[#arrayY]
 
     table.insert(snake, {
       x = arrayX[#arrayX],
@@ -78,32 +89,40 @@ function love.update(dt)
       width = point.width,
       height = point.height
     })
-    
-    repeat
-      point.x = math.random(CW-point.width)
-      point.y = math.random(CH-point.height)
-    until (point.x % point.width == 0) and (point.y % point.height == 0)
+
+    point:checkPosition()
+  end
+
+  for i = 4, #snake do
+    if ((snake[1].x == snake[i].x) and (snake[1].y == snake[i].y)) then
+      bite:play()
+      
+      for j = 2, #snake do
+        table.remove(snake, j)
+        table.remove(arrayX, j)
+        table.remove(arrayY, j)
+      end
+
+      snake[1].x = CW/2 - snake[1].width/2
+      snake[1].y = CH/2
+      break
+    end
   end
 
   time = time + dt
   if (time >= 0.1) then
     snake[1]:update()
-
     arrayX[1] = snake[1].x
     arrayY[1] = snake[1].y
     
-    --[[
-    for i = 1, #snake do
-      arrayX[i] = snake[i].x
-      arrayY[i] = snake[i].y
-    end
-    --]]
-    
     for i = #snake, 2, -1 do
-      snake[i].x = arrayX[#arrayX]
-      snake[i].y = arrayY[#arrayY]
-      --snake[i].x = arrayX[#arrayX-i+2]
-      --snake[i].y = arrayY[#arrayY-i+2]
+      snake[i].x = arrayX[i]
+      snake[i].y = arrayY[i]
+    end
+       
+    for i = #snake, 1, -1 do
+      arrayX[i+1] = arrayX[i]
+      arrayY[i+1] = arrayY[i]
     end
 
     time = 0
@@ -119,17 +138,20 @@ function love.draw()
   for i, _ in ipairs(snake) do
     love.graphics.rectangle("fill", snake[i].x, snake[i].y, snake[i].width, snake[i].height) 
   end
+
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.print(snake[1].text .. #snake, 50, 20, 0, 1.5, 1.5)
 end
 
 
 function love.keypressed(key)
-  if (key == "h") then
+  if ((key == "h") and not (snake[1].button.right)) then
     snake[1]:move("left")
-  elseif (key == "j") then
+  elseif ((key == "j") and not (snake[1].button.up))then
     snake[1]:move("down")
-  elseif (key == "k") then
+  elseif ((key == "k") and not (snake[1].button.down)) then
     snake[1]:move("up")
-  elseif (key == "l") then
+  elseif ((key == "l") and not (snake[1].button.left)) then
     snake[1]:move("right")
   end
 end
