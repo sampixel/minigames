@@ -6,7 +6,9 @@ function love.load()
   bite = love.audio.newSource("audio/bite.wav", "stream")
 
   time = 0
-  size = 50
+  gap = 0.1
+  count = 0
+  size = (CW % 50 == 0 and CH % 50 == 0) and 50 or 20
   arrayX = {}
   arrayY = {}
 
@@ -58,11 +60,7 @@ function love.load()
     end,
     move = function(self, key)
       for k, _ in pairs(self.button) do
-        if (k == key) then
-          self.button[k] = true
-        else
-          self.button[k] = false
-        end
+        self.button[k] = (k == key) and true or false
       end
     end,
     collision = function(self, object)
@@ -90,14 +88,23 @@ function love.update(dt)
       height = point.height
     })
 
+    if (#snake % 6 == 0) then
+      gap = (gap == 0) and (0) or (gap - 0.02)
+    end
+
     point:checkPosition()
   end
 
   for i = 4, #snake do
     if ((snake[1].x == snake[i].x) and (snake[1].y == snake[i].y)) then
       bite:play()
+      gap = 0.1
+
+      for k, _ in pairs(snake[1].button) do
+        snake[1].button[k] = false
+      end
       
-      for j = 2, #snake do
+      for j = #snake, 2, -1 do
         table.remove(snake, j)
         table.remove(arrayX, j)
         table.remove(arrayY, j)
@@ -110,7 +117,7 @@ function love.update(dt)
   end
 
   time = time + dt
-  if (time >= 0.1) then
+  if (time >= gap) then
     snake[1]:update()
     arrayX[1] = snake[1].x
     arrayY[1] = snake[1].y
@@ -141,6 +148,7 @@ function love.draw()
 
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.print(snake[1].text .. #snake, 50, 20, 0, 1.5, 1.5)
+  love.graphics.print("gap: " .. gap, 50, 40, 0, 1.5, 1.5)
 end
 
 
