@@ -26,7 +26,7 @@ function love.load()
   
   snake = {}
   snake[1] = {
-    text = "snake lenght: ",
+    text = "snake length: ",
     button = {
       up = false,
       down = false,

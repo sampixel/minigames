@@ -1,5 +1,8 @@
 # Minigames with Love2D game framework
 
+### Bird - https://www.youtube.com/watch?v=mkC-O9UY2Bw
+![bird-ref](bird/images/bird-ref.png)
+
 ### Breakout - https://www.youtube.com/watch?v=nMSkn40Yk1A&t=639s
 ![breakout](breakout/images/breakout.png)
 
