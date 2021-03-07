@@ -1,6 +1,4 @@
 function love.load()
-  util = require("libs.util")
-
   CW = love.graphics.getWidth()
   CH = love.graphics.getHeight()
 
