@@ -24,5 +24,5 @@
 ### Snake - https://www.youtube.com/watch?v=kRc7lkXAKHg
 ![snake](snake/images/snake.png)
 
-### TRex - 
+### TRex - https://www.youtube.com/watch?v=Ma2z0b8Gc_o
 ![t-rex](trex/images/trex-ref.png)
