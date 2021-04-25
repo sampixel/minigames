@@ -85,3 +85,9 @@ function love.draw()
     love.graphics.rectangle("fill", enemies[i].x, enemies[i].y, enemies[i].width, enemies[i].height)
   end
 end
+
+function love.keypressed(key)
+  if (key == "return") then
+    love.event.quit("restart")
+  end
+end
