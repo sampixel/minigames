@@ -20,12 +20,15 @@ end
 
 function class.draw(self)
   love.graphics.draw(self.image, self.x, self.y, 0, self.scale.x, self.scale.y)
+end
+
+function class.draw_arrows(self)
   love.graphics.draw(self.arrow.image, self.arrow.up.x, self.arrow.up.y, 0, self.arrow.up.scale.x, self.arrow.up.scale.y)
   love.graphics.draw(self.arrow.image, self.arrow.down.x, self.arrow.down.y, 0, self.arrow.down.scale.x, self.arrow.down.scale.y)
 end
 
 function class.print(self)
-  love.graphics.print(self.text.score, self.text.x, self.text.y, 0, 2.5, 2.5)
+  love.graphics.print(self.text.score, self.text.x, self.text.y, 0, self.text.scale.x, self.text.scale.y)
 end
 
 function class.collision(self, target)
