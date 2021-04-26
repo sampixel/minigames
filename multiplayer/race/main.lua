@@ -10,9 +10,10 @@ function love.load()
 
   game = {}
   game.begin = false
+  game.finish = false
 
   stars = {}
-  for i = 1, 50 do
+  for i = 1, 100 do
     table.insert(stars, {
       x = love.math.random(tonumber(cw)),
       y = love.math.random(tonumber(ch)),
@@ -62,10 +63,10 @@ function love.load()
   }
 
   asteroids = {}
-  for i = 1, 50 do
+  for i = 1, 80 do
     table.insert(asteroids, {
       image = love.graphics.newImage("images/asteroid.png"),
-      x = love.math.random(50), y = love.math.random(100, ch - 100),
+      x = love.math.random(cw / 6, cw / 1.2), y = love.math.random(100, ch - 100),
       speed = {x = love.math.random(100, 200)},
       update = function(self, delta)
         self.x = self.x + (self.speed.x * delta)
@@ -128,43 +129,35 @@ function love.load()
 
   time = {
     circle = {
-      x = cw / 2.1,
-      y = ch / 2.1,
-      radius = 20
+      x = cw / 2,
+      y = ch / 2,
+      radius = 30
     },
     text = 60,
     scale = {x = 2, y = 2},
     update = function(self, delta)
       self.text = (tonumber(self.text) <= 0 and 0 or self.text - (delta / 1.1))
+      if (self.text == 0) then
+        game.finish = true
+      end
     end,
     draw = function(self)
-      love.graphics.print(math.floor(self.text), self.circle.x, self.circle.y, 0, self.scale.x, self.scale.y)
+      love.graphics.print(math.floor(self.text), self.circle.x - 15, self.circle.y - 15, 0, self.scale.x, self.scale.y)
     end
   }
 
   red_player = class:extend({
     filename = "red_player",
     text = {
-      x = cw / 2 - 30,
-      y = 80,
+      x = cw / 2 - 40,
+      y = 50,
       score = 0,
-      scale = {x = 2.5, y = -2.5}
+      scale = {x = 2.5, y = 2.5}
     },
-    x = (cw / 3) + 50, y = 18,
+    x = cw / 2 - 100, y = 18,
     scale = {x = 0.5, y = 0.5},
     speed = {y = 100},
     score = {num = 0, x = 50, y = 50},
-    arrow = {
-      image = love.graphics.newImage("images/arrow.png"),
-      up = {
-        x = cw / 2 - 150, y = 80,
-        scale = {x = 0.5, y = 0.5}
-      },
-      down = {
-        x = cw / 2 - 150, y = 60,
-        scale = {x = 0.5, y = -0.5}
-      }
-    },
     update = function(self, delta)
       if (love.keyboard.isDown("w")) then
         self.y = self.y + (self.speed.y * delta)
@@ -190,32 +183,11 @@ function love.load()
       score = 0,
       scale = {x = 2.5, y = 2.5}
     },
-    x = cw - ((cw / 3) + 50), y = ch - 50,
+    x = cw / 2 + 100, y = ch - 50,
     scale = {x = 0.5, y = 0.5},
     speed = {y = 100},
     score = {num = 0, x = 50, y = 50},
-    arrow = {
-      image = love.graphics.newImage("images/arrow.png"),
-      up = {
-        x = cw / 2 + 150, y = ch - 80;
-        scale = {x = 0.5, y = -0.5}
-      },
-      down = {
-        x = cw / 2 + 150, y = ch - 60,
-        scale = {x = 0.5, y = 0.5}
-      }
-    },
     update = function(self, delta)
-      local mx, my = love.mouse.getPosition()
-      if (mx > self.arrow.up.x and mx < self.arrow.image:getWidth() * self.arrow.up.scale.x and
-          my > self.arrow.up.y and my < self.arrow.image:getHeight() * self.arrow.up.scale.y and love.mouse.isDown(1)) then
-        print("iii")
-        self.y = self.y + (self.speed.y * delta)
-      elseif (mx > self.arrow.down.x and mx < self.arrow.image:getWidth() * self.arrow.down.scale.x and
-          my > self.arrow.up.y and my < self.arrow.image:getHeight() * self.arrow.down.scale.y and love.mouse.isDown(1)) then
-        self.y = self.y - (self.speed.y * delta)
-      end
-
       if (love.keyboard.isDown("k")) then
         self.y = self.y - (self.speed.y * delta)
       elseif (love.keyboard.isDown("j")) then
@@ -237,6 +209,10 @@ function love.load()
 end
 
 function love.update(delta)
+  for i = 1, #stars do
+    stars[i]:update(delta)
+  end
+
   if (game.begin) then
     if (collision.current_frame >= collision.num_frame_per_width * collision.num_frame_per_height) then
       collision.active = false
@@ -254,10 +230,6 @@ function love.update(delta)
 
     time:update(delta)
 
-    for i = 1, #stars do
-      stars[i]:update(delta)
-    end
-
     for i = 1, #asteroids do
       asteroids[i]:update(delta)
 
@@ -266,14 +238,14 @@ function love.update(delta)
         collision.x = asteroids[i].x + (asteroids[i].width * 2)
         collision.y = asteroids[i].y + (asteroids[i].height * 2)
         collision.active =  true
-        red_player.x = (cw / 3) + 50
+        red_player.x = cw / 2 - 100
         red_player.y = 18
       elseif (blue_player:collision(asteroids[i])) then
         sound.impact:play()
         collision.x = asteroids[i].x + (asteroids[i].width * 2)
         collision.y = asteroids[i].y + (asteroids[i].height * 2)
         collision.active = true
-        blue_player.x = cw - ((cw / 3) + 50)
+        blue_player.x = cw / 2 + 100
         blue_player.y = ch - 50
       end
     end
@@ -309,13 +281,11 @@ function love.draw()
   love.graphics.rectangle(rect.red.mode, rect.red.x, rect.red.y, rect.red.width, rect.red.height)
   love.graphics.line(line.red.x1, line.red.y1, line.red.x2, line.red.y2)
   red_player:print()
-  red_player:draw_arrows()
 
   love.graphics.setColor(0, 0, 1, 1)
   love.graphics.rectangle(rect.blue.mode, rect.blue.x, rect.blue.y, rect.blue.width, rect.blue.height)
   love.graphics.line(line.blue.x1, line.blue.y1, line.blue.x2, line.blue.y2)
   blue_player:print()
-  blue_player:draw_arrows()
 
   love.graphics.setColor(1, 1, 1, 1)
   red_player:draw()
@@ -330,24 +300,12 @@ function love.draw()
   end
 
   if (not game.begin) then
-    love.graphics.print("\tTouch, Click here\n\tor press \"Enter\"\n\ton the keyboard", cw / 2 - 200, ch / 2 - 70, 0, 3, 3)
+    love.graphics.print("\tPress \"Enter\"\n\ton the keyboard", cw / 2 - 200, ch / 2 - 70, 0, 3, 3)
   else
+    love.graphics.setColor(0.4, 0.2, 0.9, 1)
+    love.graphics.circle("fill", time.circle.x, time.circle.y, time.circle.radius)
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.circle("fill", time.circle.x + 15, time.circle.y + 15, time.circle.radius)
-    love.graphics.setColor(0, 0, 0, 1)
     time:draw()
-  end
-end
-
-function love.touchpressed()
-
-end
-
-function love.mousepressed(x, y, button, istouch)
-  if (button == 1) then
-    if (x == red_player.arrow.up.x and y == red_player.arrow.up.y) then
-      --red_player.y = red_player.y + (red_player.speed.y *
-    end
   end
 end
 
@@ -364,6 +322,10 @@ function love.keypressed(key)
     smoke.active = true
     smoke.x = blue_player.x + (blue_player.width / 3)
     smoke.y = blue_player.y + blue_player.height + (blue_player.height / 2)
+  elseif (key == "d") then
+    love.window.setFullscreen(false)
+  elseif (key == "f") then
+    love.window.setFullscreen(true, "desktop")
   elseif (key == "q") then
     love.event.quit("restart")
   end
