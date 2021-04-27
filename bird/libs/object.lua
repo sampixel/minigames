@@ -1,14 +1,12 @@
-local cw = love.graphics.getWidth()
-local ch = love.graphics.getHeight()
+local graphics = love.graphics
+
+local CW = love.graphics.getWidth()
+local CH = love.graphics.getHeight()
 
 local object = {
-  image = {
-    filename = "background.png",
-    scale = {x = 0.5, y = 0.4}
-  },
   bird = {
     filename = "bird-animation.png",
-    x = cw / 3, y = ch / 4,
+    x = CW / 3, y = CH / 4,
     scale = {x = 0.4, y = 0.4},
     speed = {y = 10},
     frame = {
@@ -26,7 +24,7 @@ local object = {
       end
     end,
     draw = function(self)
-      love.graphics.draw(
+      graphics.draw(
         self.image, self.sheets[math.floor(self.frame.current)],
         self.x, self.y, 0, self.scale.x, self.scale.y,
         self.frame.width, self.frame.height
@@ -47,9 +45,8 @@ local object = {
       self.x = self.x - (self.speed.x * delta)
     end,
     draw = function(self)
-      love.graphics.draw(
+      graphics.draw(
         self.image, self.x, self.y, 0, self.scale.x, self.scale.y
-        --self.width / 2, self.height / 2
       )
     end
   }
