@@ -7,15 +7,15 @@ local object = {
   bird = {
     filename = "bird-animation.png",
     x = CW / 3, y = CH / 4,
-    scale = {x = 0.4, y = 0.4},
+    scale = {x = 0.35, y = 0.35},
     speed = {y = 10},
     frame = {
       current = 1,
-      num_width = 6,
+      num_width = 3,
       num_height = 2
     },
     update = function(self, delta)
-      self.frame.current = self.frame.current + (delta * 20)
+      self.frame.current = self.frame.current + (delta * 30)
       self.y = self.y + (self.speed.y * delta)
       self.speed.y = self.speed.y + 20
 
@@ -26,28 +26,15 @@ local object = {
     draw = function(self)
       graphics.draw(
         self.image, self.sheets[math.floor(self.frame.current)],
-        self.x, self.y, 0, self.scale.x, self.scale.y,
-        self.frame.width, self.frame.height
+        self.x, self.y, 0, self.scale.x, self.scale.y
       )
     end,
     collision = function(self, target)
-      if (self.x < target.x + target.width and target.x < self.x + self.frame.width and
-          self.y < target.y + target.height and target.y < self.y + self.frame.height) then
+      if (self.x < target.x - (target.width / 2) + target.width and target.x - (target.width / 2) < self.x + self.frame.width and
+          self.y < target.y - (target.height / 2) + target.height and target.y - (target.height / 2) < self.y + self.frame.height) then
         return true
       end
       return false
-    end
-  },
-  pipe = {
-    filename = "pipe.png",
-    speed = {x = 150},
-    update = function(self, delta)
-      self.x = self.x - (self.speed.x * delta)
-    end,
-    draw = function(self)
-      graphics.draw(
-        self.image, self.x, self.y, 0, self.scale.x, self.scale.y
-      )
     end
   }
 }
