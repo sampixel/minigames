@@ -190,7 +190,7 @@ function love.update(delta)
       mid:load()
       mid.x = top.x + (top.width / 2)
       mid.y = top.height
-      mid.scale = {x = 0.0001, y = 1}
+      mid.scale = {x = 0.00001, y = 1}
       mid.height = top.height + (bot.y - top.height)
       mid.width = mid.image:getWidth() * mid.scale.x
 

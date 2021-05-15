@@ -27,7 +27,7 @@ function class.quad(self)
     local size = 128
     for j = 0, self.frame.num_width - 1 do
       table.insert(self.sheets, love.graphics.newQuad(
-        1 + (j * size), 1 + (i * size), size - 1, size - 1,
+        (j * size), (i * size), size - 1, size - 1,
         self.width, self.height
       ))
     end

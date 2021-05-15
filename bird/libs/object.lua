@@ -7,7 +7,7 @@ local object = {
   bird = {
     filename = "bird-animation.png",
     x = CW / 3, y = CH / 4,
-    scale = {x = 0.35, y = 0.35},
+    scale = {x = 0.4, y = 0.4},
     speed = {y = 10},
     frame = {
       current = 1,
